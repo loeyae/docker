@@ -1,0 +1,61 @@
+version: "3.3"
+services:
+  ihttpd:
+    build: 
+      context: ./ihttpd
+      cache_from: 
+        - httpd:latest
+    image: ihttpd:01
+    expose:
+      - "80"
+      - "81"
+      - "82"
+      - "83"
+    ports:
+      - "8002:80"
+      - "8003:81"
+      - "8004:82"
+      - "8005:83"
+    networks:
+      default:
+        ipv4_address: 172.19.0.2
+    depends_on:
+        - loeye-sample
+    volumes:
+        - type: volume
+          source: app-static
+          target: /usr/local/apache2/htdocs/static
+        - type: volume
+          source: app-bootstrap
+          target: /usr/local/apache2/htdocs/bootstrap
+  loeye-sample:
+    build:
+      context: ./loeye-sample
+      cache_from: 
+       - loeye-sample:01
+       - php:7.2-fpm
+    image: loeye-sample:02
+    expose:
+      - "9000"
+    ports:
+      - "9001:9000"
+    networks:
+      default:
+        ipv4_address: 172.19.0.4
+    volumes:
+        - type: volume
+          source: app-static
+          target: /var/www/html/loeye-sample/htdocs/static/
+        - type: volume
+          source: app-bootstrap
+          target: /var/www/html/loeye-sample/vendor/twbs/bootstrap/
+    environment:
+      SAMPLE_SERVER_URL: http://172.19.0.2:82
+      SAMPLE_BASE_SERVER_URL: 'http://172.19.0.2:83'
+networks:
+  default:
+    external:
+      name: mynet
+volumes:
+    app-static:
+    app-bootstrap:
