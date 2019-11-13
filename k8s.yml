@@ -1,0 +1,80 @@
+version: "3.3"
+services:
+    ietcd:
+        image: k8s.gcr.io/etcd:3.3.10
+        network_mode: host
+        environment:
+            ETCDCTL_API: 3
+        volumes:
+          - /var/run/etcd/etcd-data:/var/run/etcd/data
+        command:
+          - "/usr/local/bin/etcd"
+          - "--name"
+          - "s1"
+          - "--data-dir"
+          - "/var/run/etcd/data"
+          - "--advertise-client-urls"
+          - "http://0.0.0.0:2379"
+          - "--listen-client-urls"
+          - "http://0.0.0.0:2379"
+          - "--initial-advertise-peer-urls"
+          - "http://0.0.0.0:2380"
+          - "--listen-peer-urls"
+          - "http://0.0.0.0:2380"
+          - "--initial-cluster-token"
+          - "tkn"
+          - "--initial-cluster"
+          - "s1=http://0.0.0.0:2380"
+          - "--initial-cluster-state"
+          - "new"
+    iapi-server:
+        image: k8s.gcr.io/kube-apiserver:v1.15.4
+        network_mode: host
+        command:
+          - "/usr/local/bin/kube-apiserver"
+          - "--etcd-servers"
+          - "http://192.168.0.2:2379"
+          - "--insecure-bind-address"
+          - "0.0.0.0"
+          - "--insecure-port"
+          - "18080"
+          - "--admission-control"
+          - "NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ResourceQuota"
+    iapi-ctrl-m:
+        image: k8s.gcr.io/kube-controller-manager:v1.15.4
+        network_mode: host
+        command:
+          - "--enable-dynamic-provisioning"
+          - "true"
+          - "--feature-gates"
+          - "AllAlpha=true"
+          - "--horizontal-pod-autoscaler-sync-period"
+          - "10s"
+          - "--horizontal-pod-autoscaler-use-rest-clients"
+          - "true"
+          - "--node-monitor-grace-period"
+          - "10s"
+          - "--address"
+          - "0.0.0.0"
+          - "--leader-elect"
+          - "true"
+          - "--kubeconfig"
+          - "/etc/kubernetes/controller-manager.conf"
+          - "--cluster-signing-key-file"
+          - "/etc/kubernetes/pki/ca.key"
+          - "--use-service-account-credentials"
+          - "true"
+          - "--controllers"
+          - "*,bootstrapsigner,tokencleaner"
+          - "--root-ca-file"
+          - "/etc/kubernetes/pki/ca.crt"
+          - "--service-account-private-key-file"
+          - "/etc/kubernetes/pki/sa.key"
+          - "--cluster-signing-cert-file"
+          - "/etc/kubernetes/pki/ca.crt"
+          - "--allocate-node-cidrs"
+          - "true"
+          - "--cluster-cidr"
+          - "10.244.0.0/16"
+          - "--node-cidr-mask-size"
+          - "24"
