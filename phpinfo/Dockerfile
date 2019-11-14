@@ -60,29 +60,29 @@ RUN docker-php-ext-configure gd \
         
 # Install PECL extensions
 # see http://stackoverflow.com/a/8154466/291573) for usage of `printf`
-RUN printf "\n" | pecl install \
-        imagick \
-        mongodb \
-        yaml && \
-    docker-php-ext-enable \
-        imagick \
-        mongodb \
-        yaml
+#RUN printf "\n" | pecl install \
+#        imagick \
+#        mongodb \
+#        yaml && \
+#    docker-php-ext-enable \
+#        imagick \
+#        mongodb \
+#        yaml
 
 # Check if Xdebug extension need to be compiled
-RUN cd /tmp && \
-    git clone git://github.com/xdebug/xdebug.git && \
-    cd xdebug && \
-    git checkout 2.7.2 && \
-    phpize && \
-    ./configure --enable-xdebug && \
-    make && \
-    make install && \
-    rm -rf /tmp/xdebug
+#RUN cd /tmp && \
+#    git clone git://github.com/xdebug/xdebug.git && \
+#    cd xdebug && \
+#    git checkout 2.7.2 && \
+#    phpize && \
+#    ./configure --enable-xdebug && \
+#    make && \
+#    make install && \
+#    rm -rf /tmp/xdebug
 
 # Environment settings
 ENV PHP_USER_ID=33 \
-    PHP_ENABLE_XDEBUG=0 \
+#    PHP_ENABLE_XDEBUG=0 \
     PATH=/var/www/html/vendor/bin:/root/.composer/vendor/bin:$PATH \
     TERM=linux \
     GITHUB_API_TOKEN=9c21de6eac4c969cbb9970fb3e1565c6b23041ca \
