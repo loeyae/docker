@@ -4,7 +4,7 @@ metadata:
   name: ijenkins
   namespace: my-devops
   labels:
-    devops-app: devops-jenkins
+    app: jenkins
 spec:
   type: NodePort
   ports:
@@ -13,7 +13,7 @@ spec:
     - port: 50000
       nodePort: 50000
   selector:
-    devops-app: devops-jenkins
+    app: jenkins
 
 ---
 
@@ -23,11 +23,11 @@ metadata:
   name: isonarqube
   namespace: my-devops
   labels:
-    devops-app: devops-sonarqube
+    app: sonarqube
 spec:
   type: NodePort
   ports:
     - port: 9000
       nodePort: 9005
   selector:
-    devops-app: devops-sonarqube
+    app: sonarqube
