@@ -1,0 +1,76 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: my-devops
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ijenkins
+  namespace: my-devops
+  labels:
+    app: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      restartPolicy: true
+      containers:
+        - name: jenkins
+          image: ijenkins:02
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: my_jenkins
+      volumes:
+        - name: my_jenkins
+          emptyDir: {}
+
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: isonarqube
+  namespace: my-devops
+  labels:
+    app: sonarqube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube
+  template:
+    metadata:
+      labels:
+        app: sonarqube
+    spec:
+      restartPolicy: true
+      containers:
+        - name: sonarqube
+          image: sonarqube:7.9.1-community
+          volumeMounts:
+            - name: sonarqube_conf
+              mountPath: /opt/sonarqube/conf
+            - name: sonarqube_extensions
+              mountPath: /opt/sonarqube/extensions
+            - name: sonarqube_logs
+              mountPath: /opt/sonarqube/logs
+            - name: sonarqube_data
+              mountPath: /opt/sonarqube/data
+      volumes:
+        - name: sonarqube_conf
+          emptyDir: {}
+        - name: sonarqube_extensions
+          emptyDir:
+        - name: sonarqube_logs
+          emptyDir: {}
+        - name: sonarqube_data
+          emptyDir: {}
+

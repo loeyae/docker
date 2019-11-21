@@ -22,7 +22,8 @@ RUN curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/$(. /etc/os-release; e
     apt-get update --fix-missing && \
     apt-get -y install docker-ce && \
     rm -rf /var/lib/apt/lists/* && \
-    sed -i -e '$ a export DOCKER_HOST=tcp://192.168.0.2:32375' /etc/profile && \
-    export DOCKER_HOST=tcp://192.168.0.2:32375
+    sed -i -e '$ a export DOCKER_HOST=tcp://192.168.0.2:32375 DOCKER_TLS_VERIFY=1' /etc/profile && \
+    export DOCKER_HOST=tcp://192.168.0.2:32375 DOCKER_TLS_VERIFY=1
+COPY image-files/ /
 #    sed -i -e '$ a export DOCKER_HOST=tcp://171.213.19.251:32375' /etc/profile && \
 #    export DOCKER_HOST=tcp://171.213.19.251:32375
