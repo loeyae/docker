@@ -10,10 +10,10 @@ spec:
   ports:
     - name: web
       port: 8080
-      nodePort: 38080
+      nodePort: 30080
     - name: api
       port: 50000
-      nodePort: 35000
+      nodePort: 30500
   selector:
     app: jenkins
 
@@ -30,6 +30,6 @@ spec:
   type: NodePort
   ports:
     - port: 9000
-      nodePort: 39005
+      nodePort: 30090
   selector:
     app: sonarqube
