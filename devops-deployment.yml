@@ -27,14 +27,14 @@ spec:
           image: ijenkins:02
           ports:
             - containerPort: 8080
-              protocol: tcp
+              protocol: TCP
             - containerPort: 50000
-              protocol: tcp
+              protocol: TCP
           volumeMounts:
             - mountPath: /var/jenkins_home
-              name: my_jenkins
+              name: my-jenkins
       volumes:
-        - name: my_jenkins
+        - name: my-jenkins
           emptyDir: {}
 
 ---
@@ -61,23 +61,23 @@ spec:
           image: sonarqube:7.9.1-community
           ports:
             - containerPort: 9000
-              protocol: tcp
+              protocol: TCP
           volumeMounts:
-            - name: sonarqube_conf
+            - name: sonarqube-conf
               mountPath: /opt/sonarqube/conf
-            - name: sonarqube_extensions
+            - name: sonarqube-extensions
               mountPath: /opt/sonarqube/extensions
-            - name: sonarqube_logs
+            - name: sonarqube-logs
               mountPath: /opt/sonarqube/logs
-            - name: sonarqube_data
+            - name: sonarqube-data
               mountPath: /opt/sonarqube/data
       volumes:
-        - name: sonarqube_conf
+        - name: sonarqube-conf
           emptyDir: {}
-        - name: sonarqube_extensions
+        - name: sonarqube-extensions
           emptyDir:
-        - name: sonarqube_logs
+        - name: sonarqube-logs
           emptyDir: {}
-        - name: sonarqube_data
+        - name: sonarqube-data
           emptyDir: {}
 ---
