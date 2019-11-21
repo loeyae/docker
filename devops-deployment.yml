@@ -22,10 +22,14 @@ spec:
       labels:
         app: jenkins
     spec:
-      restartPolicy: true
       containers:
         - name: jenkins
           image: ijenkins:02
+          ports:
+            - containerPort: 8080
+              protocol: tcp
+            - containerPort: 50000
+              protocol: tcp
           volumeMounts:
             - mountPath: /var/jenkins_home
               name: my_jenkins
@@ -52,10 +56,12 @@ spec:
       labels:
         app: sonarqube
     spec:
-      restartPolicy: true
       containers:
         - name: sonarqube
           image: sonarqube:7.9.1-community
+          ports:
+            - containerPort: 9000
+              protocol: tcp
           volumeMounts:
             - name: sonarqube_conf
               mountPath: /opt/sonarqube/conf
