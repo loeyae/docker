@@ -74,4 +74,4 @@ spec:
           emptyDir: {}
         - name: sonarqube_data
           emptyDir: {}
-
+---
