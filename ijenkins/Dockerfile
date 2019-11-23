@@ -18,6 +18,8 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
         software-properties-common
 RUN curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add - && \
     add-apt-repository \
+        "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" && \
+    add-apt-repository \
       "deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/$(. /etc/os-release; echo "$ID")  $(lsb_release -cs) stable" && \
     apt-get update --fix-missing && \
     apt-get -y install docker-ce && \
