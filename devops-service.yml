@@ -1,0 +1,35 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ijenkins
+  namespace: my-devops
+  labels:
+    app: jenkins
+spec:
+  type: NodePort
+  ports:
+    - name: web
+      port: 8080
+      nodePort: 30080
+    - name: api
+      port: 50000
+      nodePort: 30500
+  selector:
+    app: jenkins
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: isonarqube
+  namespace: my-devops
+  labels:
+    app: sonarqube
+spec:
+  type: NodePort
+  ports:
+    - port: 9000
+      nodePort: 30090
+  selector:
+    app: sonarqube
