@@ -81,9 +81,9 @@ spec:
               - name: AUTOCLUSTER_CLEANUP
                 value: "true"
               - name: RABBITMQ_DEFAULT_USER
-                value: admin                         # 连接rabbit的账号
+                value: admin
               - name: RABBITMQ_DEFAULT_PASS
-                value: admin                       #连接rabbit的密码
+                value: admin
               - name: HOSTNAME
                 valueFrom:
                   fieldRef:
@@ -105,8 +105,8 @@ spec:
               - name: RABBITMQ_USE_LONGNAME
                 value: "true"
               - name: K8S_HOST
-                value: "192.168.1.110"               #   修改ip，因为
-              - name: K8S_PORT                       #   修改端口号
+                value: "192.168.1.110"
+              - name: K8S_PORT
                 value: "6443"
               - name: RABBITMQ_ERLANG_COOKIE
                 valueFrom:
@@ -164,6 +164,6 @@ spec:
       protocol: TCP
       targetPort: 25672
   selector:
-    app: rabbitmq    # 选择pod
+    app: rabbitmq
   externalIPs:
-    - 192.168.1.110    # 这里要更改一下，只在指定的外部ip上监听，而非像nodeport所有节点监听.  只用externalIPs:port  访问
+    - 192.168.1.110
