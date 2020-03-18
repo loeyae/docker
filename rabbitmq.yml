@@ -62,69 +62,69 @@ spec:
         - name: rabbitmq
           image: rabbitmq:management
           imagePullPolicy: IfNotPresent
-            ports:
-                - containerPort: 5672
-                  name: port-5672
-                - containerPort: 4369
-                  name: port-4369
-                - containerPort: 5671
-                  name: port-5671
-                - containerPort: 15672
-                  name: port-15672
-                - containerPort: 25672
-                  name: port-25672
-            env:
-              - name: AUTOCLUSTER_TYPE
-                value: "k8s"
-              - name: AUTOCLUSTER_DELAY
-                value: "10"
-              - name: AUTOCLUSTER_CLEANUP
-                value: "true"
-              - name: RABBITMQ_DEFAULT_USER
-                value: admin
-              - name: RABBITMQ_DEFAULT_PASS
-                value: admin
-              - name: HOSTNAME
-                valueFrom:
-                  fieldRef:
-                    fieldPath: status.podIP
-              - name: MY_POD_IP
-                valueFrom:
-                  fieldRef:
-                    fieldPath: status.podIP
-              - name: CLEANUP_INTERVAL
-                value: "60"
-              - name: CLEANUP_WARN_ONLY
-                value: "false"
-              - name: K8S_SERVICE_NAME
-                value: "irabbitmq"
-              - name: K8S_ADDRESS_TYPE
-                value: "hostname"
-              - name: K8S_HOSTNAME_SUFFIX
-                value: ".$(K8S_SERVICE_NAME)"
-              - name: RABBITMQ_USE_LONGNAME
-                value: "true"
-              - name: K8S_HOST
-                value: "192.168.1.110"
-              - name: K8S_PORT
-                value: "6443"
-              - name: RABBITMQ_ERLANG_COOKIE
-                valueFrom:
-                  secretKeyRef:
-                    name: erlang.cookie
-                    key: erlang.cookie
-              resources:
-                limits:
-                  cpu: 500m
-                  memory: 1024Mi
-                requests:
-                  cpu: 10m
-                  memory: 100Mi
-              volumeMounts:
-                - name: tz-config
-                  mountPath: /etc/localtime
-                - name: config-path
-                  mountPath: /var/lib/rabbitmq
+          ports:
+            - containerPort: 5672
+              name: port-5672
+            - containerPort: 4369
+              name: port-4369
+            - containerPort: 5671
+              name: port-5671
+            - containerPort: 15672
+              name: port-15672
+            - containerPort: 25672
+              name: port-25672
+          env:
+            - name: AUTOCLUSTER_TYPE
+              value: "k8s"
+            - name: AUTOCLUSTER_DELAY
+              value: "10"
+            - name: AUTOCLUSTER_CLEANUP
+              value: "true"
+            - name: RABBITMQ_DEFAULT_USER
+              value: admin
+            - name: RABBITMQ_DEFAULT_PASS
+              value: admin
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: CLEANUP_INTERVAL
+              value: "60"
+            - name: CLEANUP_WARN_ONLY
+              value: "false"
+            - name: K8S_SERVICE_NAME
+              value: "irabbitmq"
+            - name: K8S_ADDRESS_TYPE
+              value: "hostname"
+            - name: K8S_HOSTNAME_SUFFIX
+              value: ".$(K8S_SERVICE_NAME)"
+            - name: RABBITMQ_USE_LONGNAME
+              value: "true"
+            - name: K8S_HOST
+              value: "192.168.1.110"
+            - name: K8S_PORT
+              value: "6443"
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: erlang.cookie
+                  key: erlang.cookie
+            resources:
+              limits:
+                cpu: 500m
+                memory: 1024Mi
+              requests:
+                cpu: 10m
+                memory: 100Mi
+            volumeMounts:
+              - name: tz-config
+                mountPath: /etc/localtime
+              - name: config-path
+                mountPath: /var/lib/rabbitmq
       volumes:
         - name: tz-config
           hostPath:
