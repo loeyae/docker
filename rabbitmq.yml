@@ -8,6 +8,7 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: pvc-rabbirmq
+  namespace: my-dev
   labels:
     type: local
 spec:
@@ -24,6 +25,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvc-rabbirmq
+  namespace: my-dev
 spec:
   storageClassName: manual
   accessModes:
