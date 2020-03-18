@@ -113,18 +113,18 @@ spec:
                 secretKeyRef:
                   name: erlang.cookie
                   key: erlang.cookie
-            resources:
-              limits:
-                cpu: 500m
-                memory: 1024Mi
-              requests:
-                cpu: 10m
-                memory: 100Mi
-            volumeMounts:
-              - name: tz-config
-                mountPath: /etc/localtime
-              - name: config-path
-                mountPath: /var/lib/rabbitmq
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+            requests:
+              cpu: 10m
+              memory: 100Mi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+            - name: config-path
+              mountPath: /var/lib/rabbitmq
       volumes:
         - name: tz-config
           hostPath:
