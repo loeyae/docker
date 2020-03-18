@@ -4,6 +4,22 @@ metadata:
   name: my-dev
 
 ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pvc-rabbirmq
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/rabbitmq"
+
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
