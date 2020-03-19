@@ -60,10 +60,12 @@ RUN docker-php-ext-configure gd \
 # Install PECL extensions
 # see http://stackoverflow.com/a/8154466/291573) for usage of `printf`
 RUN printf "\n" | pecl install \
+        swoole \
         imagick \
         mongodb \
         yaml && \
     docker-php-ext-enable \
+        swoole \
         imagick \
         mongodb \
         yaml
