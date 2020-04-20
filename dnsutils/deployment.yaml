@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnsutils
+  labels:
+    app: dnsutils
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dnsutils
+  template:
+    metadata:
+      labels:
+        app: dnsutils
+    spec:
+      containers:
+        - name: dnsutils
+          image: tutum/dnsutils:latest

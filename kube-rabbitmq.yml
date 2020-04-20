@@ -138,7 +138,7 @@ spec:
             - name: RABBITMQ_USE_LONGNAME
               value: "true"
             - name: K8S_HOST
-              value: "192.168.1.110"
+              value: "192.168.1.220"
             - name: K8S_PORT
               value: "6443"
             - name: RABBITMQ_ERLANG_COOKIE
@@ -199,4 +199,4 @@ spec:
   selector:
     app: rabbitmq
   externalIPs:
-    - 192.168.1.110
+    - 192.168.1.220
