@@ -1,0 +1,202 @@
+#echo $(openssl rand -base64 32) > erlang.cookie
+#kubectl create secret generic erlang.cookie --from-file=erlang.cookie -n my-dev
+
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: my-dev
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pvc-rabbirmq
+  namespace: my-dev
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 3Gi
+  persistentVolumeReclaimPolicy: Retain
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/rabbitmq"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-rabbirmq
+  namespace: my-dev
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rabbitmq
+  namespace: my-dev
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: rabbitmq
+  namespace: my-dev
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - get
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: rabbitmq
+  namespace: my-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rabbitmq
+subjects:
+  - kind: ServiceAccount
+    name: rabbitmq
+    namespace: my-dev
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: irabbitmq
+  namespace: my-dev
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:management
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5672
+              name: port-5672
+            - containerPort: 4369
+              name: port-4369
+            - containerPort: 5671
+              name: port-5671
+            - containerPort: 15672
+              name: port-15672
+            - containerPort: 25672
+              name: port-25672
+          env:
+            - name: AUTOCLUSTER_TYPE
+              value: "k8s"
+            - name: AUTOCLUSTER_DELAY
+              value: "10"
+            - name: AUTOCLUSTER_CLEANUP
+              value: "true"
+            - name: RABBITMQ_DEFAULT_USER
+              value: admin
+            - name: RABBITMQ_DEFAULT_PASS
+              value: admin
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: CLEANUP_INTERVAL
+              value: "60"
+            - name: CLEANUP_WARN_ONLY
+              value: "false"
+            - name: K8S_SERVICE_NAME
+              value: "irabbitmq"
+            - name: K8S_ADDRESS_TYPE
+              value: "hostname"
+            - name: K8S_HOSTNAME_SUFFIX
+              value: ".$(K8S_SERVICE_NAME)"
+            - name: RABBITMQ_USE_LONGNAME
+              value: "true"
+            - name: K8S_HOST
+              value: "192.168.1.110"
+            - name: K8S_PORT
+              value: "6443"
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: erlang.cookie
+                  key: erlang.cookie
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+            requests:
+              cpu: 10m
+              memory: 100Mi
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+            - name: config-path
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: config-path
+          persistentVolumeClaim:
+            claimName: pvc-rabbirmq
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rabbitmq
+  name: irabbitmq
+  namespace: my-dev
+spec:
+  ports:
+    - port: 5672
+      name: port-5672
+      protocol: TCP
+      targetPort: 5672
+    - port: 4369
+      name: port-4369
+      protocol: TCP
+      targetPort: 4369
+    - port: 5671
+      name: port-5671
+      protocol: TCP
+      targetPort: 5671
+    - port: 15672
+      name: port-15672
+      protocol: TCP
+      targetPort: 15672
+    - port: 25672
+      name: port-25672
+      protocol: TCP
+      targetPort: 25672
+  selector:
+    app: rabbitmq
+  externalIPs:
+    - 192.168.1.110
