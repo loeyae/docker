@@ -1,0 +1,4 @@
+{
+  "registry-mirrors": ["https://ow8ofv5x.mirror.aliyuncs.com"],
+  "insecure-registries": ["hub.bys.cd:443", "hub.bys.cd:4443"]
+}

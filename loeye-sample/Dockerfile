@@ -6,6 +6,7 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
         /etc/apt/sources.list && \
     apt-get update && \
     apt-get -y install \
+
         gnupg2 && \
     apt-key update && \
     apt-get update && \
@@ -60,12 +61,12 @@ RUN docker-php-ext-configure gd \
 # Install PECL extensions
 # see http://stackoverflow.com/a/8154466/291573) for usage of `printf`
 RUN printf "\n" | pecl install \
-        swoole \
+#        swoole \
         imagick \
         mongodb \
         yaml && \
     docker-php-ext-enable \
-        swoole \
+#        swoole \
         imagick \
         mongodb \
         yaml
